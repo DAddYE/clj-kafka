@@ -25,7 +25,7 @@
 
 (defn shutdown
   "Closes the connection to Zookeeper and stops consuming messages."
-  [consumer]
+  [^kafka.javaapi.consumer.ConsumerConnector consumer]
   (.shutdown consumer))
 
 (defn- topic-map
@@ -35,10 +35,10 @@
 
 (defn messages
   "Creates a sequence of messages from the given topics."
-  [consumer & topics]
+  [^kafka.javaapi.consumer.ConsumerConnector consumer & topics]
   (let [[queue-seq queue-put] (pipe)]
     (doseq [[topic streams] (.createMessageStreams consumer (topic-map topics))]
-      (future (doseq [msg (iterator-seq (.iterator (first streams)))]
+      (future (doseq [msg (iterator-seq (.iterator ^kafka.consumer.KafkaMessageStream (first streams)))]
                 (queue-put (-> msg to-clojure (assoc :topic topic))))))
     queue-seq))
 

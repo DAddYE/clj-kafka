@@ -11,12 +11,12 @@
 
 (defn earliest-offset
   "Retrieves the earliest offset available for topic and partition."
-  [consumer topic partition]
+  [^SimpleConsumer consumer topic partition]
   (long (first (.getOffsetsBefore consumer topic partition (OffsetRequest/EarliestTime) 1))))
 
 (defn latest-offsets
   "Retrieves n most recent offsets for topic and partition."
-  [consumer topic partition n]
+  [^SimpleConsumer consumer topic partition n]
   (map long (.getOffsetsBefore consumer topic partition (OffsetRequest/LatestTime) n)))
 
 (defn max-offset
@@ -31,10 +31,10 @@
    partition: as specified when producing messages
    offset: offset to start retrieval
    max-size: number of bytes to retrieve"
-  [^String topic ^Integer partition ^Long offset ^Integer max-size]
+  [topic partition offset max-size]
   (FetchRequest. topic partition offset max-size))
 
 (defn messages
   "Creates a sequence of messages from the given request."
-  [consumer request]
+  [^SimpleConsumer consumer request]
   (map to-clojure (iterator-seq (.iterator (.fetch consumer request)))))

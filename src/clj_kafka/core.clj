@@ -41,7 +41,7 @@
    Source: http://clj-me.cgrand.net/2010/04/02/pipe-dreams-are-not-necessarily-made-of-promises/"
   ([] (pipe 100))
   ([size]
-   (let [q (java.util.concurrent.LinkedBlockingQueue. size)
+   (let [q (java.util.concurrent.LinkedBlockingQueue. ^Integer size)
          EOQ (Object.)
          NIL (Object.)
          s (fn queue-seq [] (lazy-seq
